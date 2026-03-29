@@ -457,28 +457,34 @@ footer p {
 }
 
 
-/* --- CHECKOUT PAGE SPECIFICS --- */
+/* --- CHECKOUT PAGE OVERRIDES --- */
 #checkout-wide-card {
-    max-width: 800px; /* Stretches the card to remove negative space */
-}
-
-#checkout-summary {
-    max-width: 100%; 
+    max-width: 800px; /* Stretches the checkout card */
+    width: 100%;
 }
 
 .form-actions {
     display: flex;
-    gap: 10px;
+    gap: 15px;
     flex-wrap: wrap;
-    margin-top: 20px;
+    margin-top: 25px;
+    justify-content: flex-start;
 }
 
 #clear-btn {
-    background-color: var(--error-red); /* Keeps only the destructive action red */
+    background-color: var(--error-red); /* Keeps clear button red */
 }
 
-/* 1b Layout - Desktop view min 950px */
-@media screen and (min-width: 950px) {
-    #productgrid { grid-template-columns: repeat(3, 1fr); }
-    .mobile-nav-button { display: none; }
+/* Ensure buttons don't stretch on desktop */
+.form-actions .btn {
+    width: auto;
+    flex: 1;
+    min-width: 150px;
+}
+
+@media screen and (max-width: 600px) {
+    .form-actions .btn {
+        width: 100%;
+        margin-right: 0;
+    }
 }
