@@ -109,26 +109,54 @@ document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('close-btn')) document.getElementById('close-btn').onclick = () => window.location.href='index.html';
     if (document.getElementById('clear-btn')) document.getElementById('clear-btn').onclick = () => document.getElementById('checkout-form').reset();
 });
-
-/* CORE MATH FUNCTIONS */
 function displayCart() {
     var container = document.querySelector('#cart-container');
     var cart = JSON.parse(localStorage.getItem('ippliance_cart')) || [];
     if (!container) return;
-    if (cart.length === 0) { container.innerHTML = '<h3>Empty</h3>'; return; }
+    
+    if (cart.length === 0) { 
+        container.innerHTML = '<div style="text-align: center; padding: 40px;"><h3>Your cart is empty.</h3><br><a href="index.html" class="btn">Browse Products</a></div>'; 
+        return; 
+    }
 
     let subtotal = 0, totalQty = 0;
-    let html = '<h2>Your Cart</h2>';
+    let html = '<h2 style="margin-bottom: 20px;">Shopping Cart</h2>';
 
     cart.forEach(item => {
         let itemSub = item.price * item.quantity;
         subtotal += itemSub; totalQty += item.quantity;
+        
+        /* Restored the image tag and the div wrapper for flexbox alignment */
         html += `<div class="cart-item">
-                    <h4>${item.name}</h4>
-                    <p>J$${item.price.toLocaleString()} x ${item.quantity} = J$${itemSub.toLocaleString()}</p>
-                    <button class="btn" onclick="removeFromCart(${item.id})">Remove</button>
+                    <img src="${item.image}" class="cart-img" style="width: 80px; border-radius: 8px;">
+                    <div style="flex: 1; margin-left: 20px; text-align: left;">
+                        <h4 style="margin-bottom: 5px;">${item.name}</h4>
+                        <p>J$${item.price.toLocaleString()} x ${item.quantity}</p>
+                    </div>
+                    <div style="text-align: right; margin-right: 20px;">
+                        <p><strong>J$${itemSub.toLocaleString()}</strong></p>
+                    </div>
+                    <button class="btn remove-btn" onclick="removeFromCart(${item.id})">Remove</button>
                  </div>`;
     });
+
+    /* 2d. Advanced Logic: Discount & Tax */
+    let discount = (totalQty >= 3) ? (subtotal * 0.10) : 0;
+    let tax = (subtotal - discount) * 0.15;
+    let grand = (subtotal - discount) + tax;
+
+    html += `<div class="summary" style="background:#f9f9f9; padding:25px; margin-top:20px; border-radius:12px; text-align: right;">
+                <p style="margin-bottom: 8px;">Sub-total: J$${subtotal.toLocaleString()}</p>
+                <p style="color:var(--error-red); margin-bottom: 8px;">Discount (10% for 3+): -J$${discount.toLocaleString()}</p>
+                <p style="margin-bottom: 15px;">GCT (15%): J$${tax.toLocaleString()}</p>
+                <hr style="border:none; border-top:1px solid #ddd; margin-bottom: 15px;">
+                <h3 style="margin-bottom: 20px; font-size: 1.5rem;">Grand Total: J$${grand.toLocaleString()}</h3>
+                <button id="clear-cart-btn" class="btn" style="background: var(--error-red);" onclick="clearCart()">Clear Cart</button>
+                <a href="checkout.html" class="btn checkout-link-btn">Proceed to Checkout</a>
+             </div>`;
+             
+    container.innerHTML = html;
+}
 
     /* 2d. Advanced Logic: Discount & Tax */
     let discount = (totalQty >= 3) ? (subtotal * 0.10) : 0;
