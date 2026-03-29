@@ -41,7 +41,15 @@ document.addEventListener('DOMContentLoaded', function() {
     updateCartIcon();
     setupMobileNav();
 
-    if (document.querySelector('#productgrid')) { displayProducts(products); }
+    if (document.querySelector('#productgrid')) { 
+        displayProducts(products); 
+        
+        /* --- PROMO ALERT (Shows Only Once) --- */
+        if (!localStorage.getItem('ippliance_promo_seen')) {
+            alert("Special Deal: Get 10% off your subtotal when you purchase 3 or more items!");
+            localStorage.setItem('ippliance_promo_seen', 'true');
+        }
+    }
     if (document.querySelector('#cart-container')) { displayCart(); }
     if (document.querySelector('#checkout-summary')) { displayCheckoutSummary(); }
 
