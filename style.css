@@ -456,12 +456,17 @@ footer p {
     }
 }
 
+/* 1b Layout - Desktop view min 950px */
+@media screen and (min-width: 950px) {
+    #productgrid { grid-template-columns: repeat(3, 1fr); }
+    .mobile-nav-button { display: none; }
+}
 
 /* --- CHECKOUT PAGE OVERRIDES --- */
 #checkout-wide-card {
-    max-width: 800px; /* Stretches the checkout card */
-    width: 100%;
-    margin: 0 auto;
+    max-width: 800px !important; 
+    width: 100% !important;
+    margin: 0 auto !important; 
 }
 
 .form-actions {
@@ -469,23 +474,24 @@ footer p {
     gap: 15px;
     flex-wrap: wrap;
     margin-top: 25px;
-    justify-content: flex-start;
+    justify-content: center; 
 }
 
 #clear-btn {
-    background-color: var(--error-red); /* Keeps clear button red */
+    background-color: var(--error-red) !important; 
 }
 
 /* Ensure buttons don't stretch on desktop */
 .form-actions .btn {
-    width: auto;
+    width: auto !important;
     flex: 1;
     min-width: 150px;
+    margin-top: 0;
 }
 
 @media screen and (max-width: 600px) {
     .form-actions .btn {
-        width: 100%;
+        width: 100% !important;
         margin-right: 0;
     }
 }
