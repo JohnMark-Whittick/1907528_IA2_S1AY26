@@ -82,8 +82,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     window.location.href = 'index.html';
                 } else {
                     /* 2a. DOM Manipulation to dynamically update error text for mismatched credentials */
-                    if (userErr) { userErr.innerText = 'Invalid credentials'; userErr.style.display = 'block'; }
-                    if (passErr) { passErr.innerText = 'Invalid credentials'; passErr.style.display = 'block'; }
+                    if (userErr) { userErr.innerText = 'Invalid Username'; userErr.style.display = 'block'; }
+                    if (passErr) { passErr.innerText = 'Invalid Password'; passErr.style.display = 'block'; }
                 }
             }
         });
