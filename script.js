@@ -166,8 +166,12 @@ function displayCart() {
     var cart = JSON.parse(localStorage.getItem('ippliance_cart')) || [];
     if (!container) return;
 
-    if (cart.length === 0) {
-        container.innerHTML = '<h3>Your cart is empty.</h3><a href="index.html" class="btn">Browse Products</a>';
+  if (cart.length === 0) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 40px 0;">
+                <h3 style="margin-bottom: 20px;">Your cart is empty.</h3>
+                <a href="index.html" class="btn" style="width: auto; display: inline-block; padding: 12px 30px;">Browse Products</a>
+            </div>`;
         return;
     }
 
