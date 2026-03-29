@@ -187,7 +187,7 @@ h1, h2 {
 }
 
 /* 1d Code Quality - ID selectors make checkout buttons not full width */
-#confirm-order-btn, #cancel-btn, #clear-btn, #close-btn {
+#confirm-order-btn, #cancel-btn, #clear-btn, #close-btn #clear-cart-btn {
     width: auto;
     display: inline-block;
     margin-right: 10px;
