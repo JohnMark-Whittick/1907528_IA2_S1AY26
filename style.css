@@ -207,6 +207,7 @@ h1, h2 {
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     max-width: 500px;
+    margin: 30px auto 0 auto;
 }
 
 #checkout-summary h3 {
