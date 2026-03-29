@@ -36,361 +36,158 @@ var products = [
     { id: 28, name: "Ryobi Heat Gun",                category: "tools",         price: 11000,  image: "heatgun.jpg" }
 ];
 
-/*2b. Event Handling: First Event Handling event listener for when the HTML document finishes loading */
+/* 2b. Event Handling: DOMContentLoaded */
 document.addEventListener('DOMContentLoaded', function() {
     updateCartIcon();
     setupMobileNav();
 
-    /* 2a. DOM Manipulationn QuerySelector to check which page is currently active */
     if (document.querySelector('#productgrid')) { displayProducts(products); }
     if (document.querySelector('#cart-container')) { displayCart(); }
     if (document.querySelector('#checkout-summary')) { displayCheckoutSummary(); }
 
-    /* 2a. DOM Manipulation for getElement & 2b. Event Handling and attaching a click listener to the login button */
+    /* Login Logic with Errors */
     var loginBtn = document.getElementById('loginbtn');
     if (loginBtn) {
         loginBtn.addEventListener('click', function(e) {
             e.preventDefault();
             var userIn = document.getElementById('login-username').value.trim();
             var passIn = document.getElementById('login-password').value.trim();
-            
             var userErr = document.getElementById('username-error');
             var passErr = document.getElementById('password-error');
-            var isValid = true;
-
-            /* 2c. Form Validation to check if login fields are empty */
-            if (userIn === '') {
-                if (userErr) { userErr.innerText = 'Username is required'; userErr.style.display = 'block'; }
-                isValid = false;
-            } else {
-                if (userErr) userErr.style.display = 'none';
-            }
-
-            if (passIn === '') {
-                if (passErr) { passErr.innerText = 'Password is required'; passErr.style.display = 'block'; }
-                isValid = false;
-            } else {
-                if (passErr) passErr.style.display = 'none';
-            }
-
-            if (isValid) {
-                var savedUser = JSON.parse(localStorage.getItem('ippliance_user'));
-
-                /* 2d. Logic control structure if/else for login verification */
-                if (savedUser && savedUser.username === userIn && savedUser.password === passIn) {
-                    alert('Welcome back to I-ppliance!');
-                    window.location.href = 'index.html';
-                } else {
-                    /* 2a. DOM Manipulation to dynamically update error text for mismatched credentials */
-                    if (userErr) { userErr.innerText = 'Invalid Username'; userErr.style.display = 'block'; }
-                    if (passErr) { passErr.innerText = 'Invalid Password'; passErr.style.display = 'block'; }
-                }
-            }
-        });
-    }
-
-    var registerBtn = document.getElementById('registerbtn');
-    if (registerBtn) {
-        /* 2b. Event Handling: Second working event listener attached to the registration button */
-        registerBtn.addEventListener('click', function(e) {
-            e.preventDefault();
             
-            var fnameNode = document.getElementById('firstname');
-            var lnameNode = document.getElementById('lastname');
-            var emailNode = document.getElementById('email') || document.getElementById('reg-email');
-            var dobNode   = document.getElementById('dob');
-            var userNode  = document.getElementById('username');
-            var passNode  = document.getElementById('reg-password');
-            var cpassNode = document.getElementById('reg-cpassword');
+            if (userIn === '') { userErr.innerText = 'Username required'; userErr.style.display='block'; return; }
+            if (passIn === '') { passErr.innerText = 'Password required'; passErr.style.display='block'; return; }
 
-            var fname = fnameNode ? fnameNode.value.trim() : '';
-            var lname = lnameNode ? lnameNode.value.trim() : '';
-            var email = emailNode ? emailNode.value.trim() : '';
-            var dob   = dobNode ? dobNode.value.trim() : '';
-            var user  = userNode ? userNode.value.trim() : '';
-            var pass  = passNode ? passNode.value.trim() : '';
-            var cpass = cpassNode ? cpassNode.value.trim() : '';
-
-            var isValid = true;
-
-            function toggleError(idList, isError) {
-                idList.forEach(function(id) {
-                    var el = document.getElementById(id);
-                    if (el) { el.style.display = isError ? 'block' : 'none'; }
-                });
-            }
-
-            /* 2c. Form Validation to check if fields match or are empty */
-            /* 2a. DOM Manipulation to update CSS using JS to display error message */
-            if (fnameNode && fname === '') { toggleError(['user-fname-error', 'firstname-error'], true); isValid = false; }
-            else { toggleError(['user-fname-error', 'firstname-error'], false); }
-
-            if (lnameNode && lname === '') { toggleError(['user-lname-error', 'lastname-error'], true); isValid = false; }
-            else { toggleError(['user-lname-error', 'lastname-error'], false); }
-
-            if (emailNode && (email === '' || !email.includes('@'))) { toggleError(['user-email-error', 'email-error', 'reg-email-error'], true); isValid = false; }
-            else { toggleError(['user-email-error', 'email-error', 'reg-email-error'], false); }
-
-            if (dobNode && dob === '') { toggleError(['user-dob-error', 'dob-error'], true); isValid = false; }
-            else { toggleError(['user-dob-error', 'dob-error'], false); }
-
-            if (userNode && user === '') { toggleError(['user-username-error', 'username-error'], true); isValid = false; }
-            else { toggleError(['user-username-error', 'username-error'], false); }
-
-            if (passNode && pass === '') { toggleError(['user-password-error', 'password-error', 'reg-password-error'], true); isValid = false; }
-            else { toggleError(['user-password-error', 'password-error', 'reg-password-error'], false); }
-
-            if (cpassNode && (pass !== cpass || cpass === '')) { toggleError(['user-cpassword-error', 'cpassword-error'], true); isValid = false; }
-            else { toggleError(['user-cpassword-error', 'cpassword-error'], false); }
-
-            if (isValid) {
-                var userData = { firstname: fname, username: user, password: pass };
-                localStorage.setItem('ippliance_user', JSON.stringify(userData));
-                
-                alert('Registration successful, ' + fname + '! Redirecting to Login.');
-                window.location.href = 'login.html';
-            }
-        });
-    }
-
-    /* --- CHECKOUT BUTTONS LOGIC --- */
-    
-    var confirmOrderBtn = document.getElementById('confirm-order-btn');
-    if (confirmOrderBtn) {
-        confirmOrderBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Safely grab inputs (checking if they exist to prevent crashes)
-            var fnEl = document.getElementById('firstname');
-            var lnEl = document.getElementById('lastname');
-            var emEl = document.getElementById('email');
-            var phEl = document.getElementById('phone');
-            var adEl = document.getElementById('address');
-            var paEl = document.getElementById('parish');
-
-            var firstname = fnEl ? fnEl.value.trim() : '';
-            var lastname  = lnEl ? lnEl.value.trim() : '';
-            var email     = emEl ? emEl.value.trim() : '';
-            var phone     = phEl ? phEl.value.trim() : '';
-            var address   = adEl ? adEl.value.trim() : '';
-            var parish    = paEl ? paEl.value : '';
-
-            var isValid = true;
-
-            function toggleCheckoutErr(id, show) {
-                var errEl = document.getElementById(id);
-                if (errEl) { errEl.style.display = show ? 'block' : 'none'; }
-            }
-
-            /* 2c. Form Validation / Input Handling  to check if a field is empty and updates the DOM with error messages */
-            if (fnEl && firstname === '') { toggleCheckoutErr('user-fname-error', true); isValid = false; }
-            else { toggleCheckoutErr('user-fname-error', false); }
-
-            if (lnEl && lastname === '') { toggleCheckoutErr('user-lname-error', true); isValid = false; }
-            else { toggleCheckoutErr('user-lname-error', false); }
-
-            /* 2c. Form Validation / Input Handling  for email format using .includes('@') */
-            if (emEl && (email === '' || !email.includes('@'))) { toggleCheckoutErr('user-email-error', true); isValid = false; }
-            else { toggleCheckoutErr('user-email-error', false); }
-
-            if (phEl && phone === '') { toggleCheckoutErr('user-phone-error', true); isValid = false; }
-            else { toggleCheckoutErr('user-phone-error', false); }
-
-            if (adEl && address === '') { toggleCheckoutErr('user-address-error', true); isValid = false; }
-            else { toggleCheckoutErr('user-address-error', false); }
-
-            if (paEl && parish === '') { toggleCheckoutErr('user-parish-error', true); isValid = false; }
-            else { toggleCheckoutErr('user-parish-error', false); }
-
-            if (isValid) {
-                alert('Thank you for your order! It is now being processed.');
-                localStorage.removeItem('ippliance_cart'); 
+            var savedUser = JSON.parse(localStorage.getItem('ippliance_user'));
+            if (savedUser && savedUser.username === userIn && savedUser.password === passIn) {
                 window.location.href = 'index.html';
+            } else {
+                userErr.innerText = 'Invalid credentials'; userErr.style.display='block';
+                passErr.innerText = 'Invalid credentials'; passErr.style.display='block';
             }
         });
     }
 
-    var cancelBtn = document.getElementById('cancel-btn');
-    if (cancelBtn) {
-        cancelBtn.addEventListener('click', function(e) {
+    /* Registration Logic with Errors */
+    var regBtn = document.getElementById('registerbtn');
+    if (regBtn) {
+        regBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            window.location.href = 'cart.html'; // Goes back to cart
+            var fn = document.getElementById('firstname').value.trim();
+            var ln = document.getElementById('lastname').value.trim();
+            var em = document.getElementById('email').value.trim();
+            var db = document.getElementById('dob').value.trim();
+            var un = document.getElementById('username').value.trim();
+            var pw = document.getElementById('reg-password').value.trim();
+            var cp = document.getElementById('reg-cpassword').value.trim();
+
+            var valid = true;
+            if (fn==='') { document.getElementById('user-fname-error').style.display='block'; valid=false; }
+            if (ln==='') { document.getElementById('user-lname-error').style.display='block'; valid=false; }
+            if (em==='' || !em.includes('@')) { document.getElementById('user-email-error').style.display='block'; valid=false; }
+            if (db==='') { document.getElementById('user-dob-error').style.display='block'; valid=false; }
+            if (un==='') { document.getElementById('username-error').style.display='block'; valid=false; }
+            if (pw==='') { document.getElementById('user-password-error').style.display='block'; valid=false; }
+            if (pw!==cp || cp==='') { document.getElementById('user-cpassword-error').style.display='block'; valid=false; }
+
+            if (valid) {
+                localStorage.setItem('ippliance_user', JSON.stringify({firstname: fn, username: un, password: pw}));
+                alert('Success!'); window.location.href = 'login.html';
+            }
         });
     }
 
-    var clearBtn = document.getElementById('clear-btn');
-    if (clearBtn) {
-        clearBtn.addEventListener('click', function(e) {
+    /* Checkout Buttons */
+    var confBtn = document.getElementById('confirm-order-btn');
+    if (confBtn) {
+        confBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            var form = document.getElementById('checkout-form');
-            if (form) form.reset(); // Clears all input fields
-            
-            // Hides all the red error messages
-            var errorMsgs = document.querySelectorAll('.error-msg');
-            errorMsgs.forEach(msg => msg.style.display = 'none');
+            alert('Order Placed!'); localStorage.removeItem('ippliance_cart'); window.location.href='index.html';
         });
     }
-
-    var closeBtn = document.getElementById('close-btn');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            window.location.href = 'index.html'; // Goes back to the main storefront
-        });
-    }
-
-    /* 2a. DOM Manipulation for Using querySelectorAll & 2d. Basic Interactivity for looping through categories to filter products */
-    var categoryBtns = document.querySelectorAll('.category-btn');
-    categoryBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            var category = this.getAttribute('data-category');
-            categoryBtns.forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-            var filtered = (category === 'all') ? products : products.filter(p => p.category === category);
-            displayProducts(filtered);
-        });
-    });
+    if (document.getElementById('cancel-btn')) document.getElementById('cancel-btn').onclick = () => window.location.href='cart.html';
+    if (document.getElementById('close-btn')) document.getElementById('close-btn').onclick = () => window.location.href='index.html';
+    if (document.getElementById('clear-btn')) document.getElementById('clear-btn').onclick = () => document.getElementById('checkout-form').reset();
 });
 
-function displayProducts(list) {
-    /* 2a. DOM Manipulation querySelector to display products */
-    var grid = document.querySelector('#productgrid');
-    if (!grid) return;
-    
-    grid.innerHTML = '';
-    list.forEach(item => {
-        grid.innerHTML += `
-            <div class="product-card">
-                <img src="${item.image}" alt="${item.name}">
-                <h3>${item.name}</h3>
-                <p class="price">J$${item.price.toLocaleString()}</p>
-                <button class="btn" onclick="addToCart(${item.id})">Add to Cart</button>
-            </div>`;
-    });
-}
-
-function addToCart(id) {
-    var cart = JSON.parse(localStorage.getItem('ippliance_cart')) || [];
-    var product = products.find(p => p.id === id);
-    var existing = cart.find(item => item.id === id);
-
-    if (existing) { existing.quantity += 1; }
-    else { cart.push({...product, quantity: 1}); }
-
-    localStorage.setItem('ippliance_cart', JSON.stringify(cart));
-    updateCartIcon();
-    alert(product.name + ' added to cart!');
-}
-
+/* CORE MATH FUNCTIONS */
 function displayCart() {
     var container = document.querySelector('#cart-container');
     var cart = JSON.parse(localStorage.getItem('ippliance_cart')) || [];
     if (!container) return;
+    if (cart.length === 0) { container.innerHTML = '<h3>Empty</h3>'; return; }
 
-   if (cart.length === 0) {
-        container.innerHTML = `
-            <div style="text-align: center; padding: 40px 0;">
-                <h3 style="margin-bottom: 20px;">Your cart is empty.</h3>
-                <a href="index.html" class="btn" style="width: auto; display: inline-block; padding: 12px 30px;">Browse Products</a>
-            </div>`;
-        return;
-    }
+    let subtotal = 0, totalQty = 0;
+    let html = '<h2>Your Cart</h2>';
 
-    let total = 0;
-    let html = '<h2>Shopping Cart</h2>';
     cart.forEach(item => {
-        /* 2d. Logic arithmetic calculations to display quantity for each item added to cart */
-        total += item.price * item.quantity;
-        
-        /* 2a. DOM Manipulation for HTML elements added to view */
-        html += `
-            <div class="cart-item">
-                <img src="${item.image}" class="cart-img" style="width: 80px;">
-                <div><h4>${item.name}</h4><p>J$${item.price.toLocaleString()} x ${item.quantity}</p></div>
-                <button class="btn remove-btn" onclick="removeFromCart(${item.id})">Remove</button>
-            </div>`;
+        let itemSub = item.price * item.quantity;
+        subtotal += itemSub; totalQty += item.quantity;
+        html += `<div class="cart-item">
+                    <h4>${item.name}</h4>
+                    <p>J$${item.price.toLocaleString()} x ${item.quantity} = J$${itemSub.toLocaleString()}</p>
+                    <button class="btn" onclick="removeFromCart(${item.id})">Remove</button>
+                 </div>`;
     });
 
-    html += `
-        <div class="cart-total">
-            <h3>Total: J$${total.toLocaleString()}</h3>
-            <button id="clear-cart-btn" class="btn" onclick="clearCart()">Clear Cart</button>
-            <a href="checkout.html" class="btn checkout-link-btn">Checkout</a>
-        </div>`;
+    /* 2d. Advanced Logic: Discount & Tax */
+    let discount = (totalQty >= 3) ? (subtotal * 0.10) : 0;
+    let tax = (subtotal - discount) * 0.15;
+    let grand = (subtotal - discount) + tax;
+
+    html += `<div class="summary" style="background:#eee; padding:15px; margin-top:10px; border-radius:8px;">
+                <p>Sub-total: J$${subtotal.toLocaleString()}</p>
+                <p style="color:red;">Discount (10%): -J$${discount.toLocaleString()}</p>
+                <p>GCT (15%): J$${tax.toLocaleString()}</p>
+                <hr><h3>Total: J$${grand.toLocaleString()}</h3>
+                <a href="checkout.html" class="btn">Checkout</a>
+             </div>`;
     container.innerHTML = html;
-}
-
-function removeFromCart(id) {
-    var cart = JSON.parse(localStorage.getItem('ippliance_cart')) || [];
-    cart = cart.filter(item => item.id !== id);
-    localStorage.setItem('ippliance_cart', JSON.stringify(cart));
-    displayCart();
-    updateCartIcon();
-}
-
-function clearCart() {
-    localStorage.removeItem('ippliance_cart');
-    displayCart();
-    updateCartIcon();
-}
-
-function updateCartIcon() {
-    var cart = JSON.parse(localStorage.getItem('ippliance_cart')) || [];
-    /* 2d. Logic arithmetic calculation utilizing the array reduce method */
-    var count = cart.reduce((sum, item) => sum + item.quantity, 0);
-    
-    var navLinks = document.querySelectorAll('nav a');
-    navLinks.forEach(link => {
-        if (link.getAttribute('href') === 'cart.html' || link.textContent.toLowerCase().includes('cart')) {
-            /* 2a. DOM Manipulation to update HTML using innerText to display cart count */
-            if (count > 0) {
-                link.innerText = 'Cart (' + count + ')';
-            } else {
-                link.innerText = 'Cart';
-            }
-        }
-    });
 }
 
 function displayCheckoutSummary() {
     var container = document.querySelector('#checkout-summary');
-    var amountInput = document.getElementById('amount');
+    var amtInput = document.getElementById('amount');
     var cart = JSON.parse(localStorage.getItem('ippliance_cart')) || [];
-    
-    let total = 0;
-    let html = '<ul style="list-style:none; padding:0; margin: 0;">';
-    
-    cart.forEach(item => {
-        total += item.price * item.quantity;
-        html += `<li style="margin-bottom: 8px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">
-                    <strong>${item.name}</strong> (x${item.quantity}) 
-                    <span style="float: right;">J$${(item.price * item.quantity).toLocaleString()}</span>
-                 </li>`;
-    });
-    
-    html += `</ul><h4 style="margin-top: 15px; text-align: right;">Grand Total: J$${total.toLocaleString()}</h4>`;
-    
-    if (container) {
-        if (cart.length > 0) {
-            container.innerHTML = html;
-        } else {
-            container.innerHTML = '<p>Your cart is empty.</p>';
-        }
-    }
-    
-    // Inject the calculated total into the "Amount Being Paid" text box
-    if (amountInput) {
-        amountInput.value = "J$" + total.toLocaleString();
-    }
+    if (!container) return;
+
+    let subtotal = 0, totalQty = 0;
+    cart.forEach(item => { subtotal += (item.price * item.quantity); totalQty += item.quantity; });
+
+    let discount = (totalQty >= 3) ? (subtotal * 0.10) : 0;
+    let tax = (subtotal - discount) * 0.15;
+    let grand = (subtotal - discount) + tax;
+
+    container.innerHTML = `<h4>Summary</h4><p>Subtotal: J$${subtotal.toLocaleString()}</p><p>Tax: J$${tax.toLocaleString()}</p><h3>Grand Total: J$${grand.toLocaleString()}</h3>`;
+    if (amtInput) amtInput.value = "J$" + grand.toLocaleString();
 }
 
+/* UI Helpers */
+function addToCart(id) {
+    var cart = JSON.parse(localStorage.getItem('ippliance_cart')) || [];
+    var p = products.find(x => x.id === id);
+    var exist = cart.find(x => x.id === id);
+    if (exist) exist.quantity++; else cart.push({...p, quantity: 1});
+    localStorage.setItem('ippliance_cart', JSON.stringify(cart));
+    updateCartIcon(); alert('Added!');
+}
+function removeFromCart(id) {
+    var cart = JSON.parse(localStorage.getItem('ippliance_cart')) || [];
+    localStorage.setItem('ippliance_cart', JSON.stringify(cart.filter(x => x.id !== id)));
+    displayCart(); updateCartIcon();
+}
+function updateCartIcon() {
+    var cart = JSON.parse(localStorage.getItem('ippliance_cart')) || [];
+    var count = cart.reduce((s, i) => s + i.quantity, 0);
+    document.querySelectorAll('nav a').forEach(a => { if(a.innerText.includes('Cart')) a.innerText = count > 0 ? `Cart (${count})` : 'Cart'; });
+}
 function setupMobileNav() {
-    var menuBtn = document.querySelector('.mobile-nav-button');
-    var nav = document.querySelector('nav');
-    if (menuBtn && nav) {
-        menuBtn.addEventListener('click', function() {
-            /* 2a. DOM Manipulation to update CSS by toggling the 'active' class */
-            nav.classList.toggle('active');
-        });
-    }
+    var b = document.querySelector('.mobile-nav-button');
+    var n = document.querySelector('nav');
+    if (b && n) b.onclick = () => n.classList.toggle('active');
+}
+function displayProducts(list) {
+    var g = document.querySelector('#productgrid');
+    if (!g) return;
+    g.innerHTML = list.map(i => `<div class="product-card"><img src="${i.image}"><h3>${i.name}</h3><p>J$${i.price.toLocaleString()}</p><button class="btn" onclick="addToCart(${i.id})">Add to Cart</button></div>`).join('');
 }
