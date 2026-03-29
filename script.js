@@ -71,7 +71,12 @@ document.addEventListener('DOMContentLoaded', function() {
         /* 2b. Event Handling: Second working event listener attached to the registration button */
         registerBtn.addEventListener('click', function(e) {
             e.preventDefault();
+            
+            // Grab all values from the form
             var fname = document.getElementById('firstname').value.trim();
+            var lname = document.getElementById('lastname').value.trim();
+            var email = document.getElementById('email').value.trim();
+            var dob   = document.getElementById('dob').value.trim();
             var user  = document.getElementById('username').value.trim();
             var pass  = document.getElementById('reg-password').value.trim();
             var cpass = document.getElementById('reg-cpassword').value.trim(); 
@@ -80,43 +85,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
             /* 2c. Form Validation to check if fields match or are empty */
             /* 2a. DOM Manipulation to update CSS using JS to display error message */
+            
+            if (fname === '') { document.getElementById('user-fname-error').style.display = 'block'; isValid = false; }
+            else { document.getElementById('user-fname-error').style.display = 'none'; }
 
-            // First Name Check (Uses a fallback ID just in case your HTML differs slightly)
-            var fnameErr = document.getElementById('user-fname-error') || document.getElementById('firstname-error');
-            if (fname === '') {
-                if(fnameErr) fnameErr.style.display = 'block';
-                isValid = false;
-            } else {
-                if(fnameErr) fnameErr.style.display = 'none';
-            }
+            if (lname === '') { document.getElementById('user-lname-error').style.display = 'block'; isValid = false; }
+            else { document.getElementById('user-lname-error').style.display = 'none'; }
 
-            // Username Check
-            var userErr = document.getElementById('username-error');
-            if (user === '') {
-                if(userErr) userErr.style.display = 'block';
-                isValid = false;
-            } else {
-                if(userErr) userErr.style.display = 'none';
-            }
+            if (email === '' || !email.includes('@')) { document.getElementById('user-email-error').style.display = 'block'; isValid = false; }
+            else { document.getElementById('user-email-error').style.display = 'none'; }
 
-            // Password Check
-            var passErr = document.getElementById('user-password-error');
-            if (pass === '') {
-                if(passErr) passErr.style.display = 'block';
-                isValid = false;
-            } else {
-                if(passErr) passErr.style.display = 'none';
-            }
+            if (dob === '') { document.getElementById('user-dob-error').style.display = 'block'; isValid = false; }
+            else { document.getElementById('user-dob-error').style.display = 'none'; }
 
-            // Confirm Password Match Check
-            var cpassErr = document.getElementById('user-cpassword-error');
-            if (pass !== cpass || cpass === '') {
-                if(cpassErr) cpassErr.style.display = 'block';
-                isValid = false;
-            } else {
-                if(cpassErr) cpassErr.style.display = 'none';
-            }
+            if (user === '') { document.getElementById('username-error').style.display = 'block'; isValid = false; }
+            else { document.getElementById('username-error').style.display = 'none'; }
 
+            if (pass === '') { document.getElementById('user-password-error').style.display = 'block'; isValid = false; }
+            else { document.getElementById('user-password-error').style.display = 'none'; }
+
+            if (pass !== cpass || cpass === '') { document.getElementById('user-cpassword-error').style.display = 'block'; isValid = false; }
+            else { document.getElementById('user-cpassword-error').style.display = 'none'; }
+
+            // If everything passed validation, save to localStorage
             if (isValid) {
                 var userData = { firstname: fname, username: user, password: pass };
                 localStorage.setItem('ippliance_user', JSON.stringify(userData));
