@@ -1,4 +1,4 @@
-/* 1c Consistency & Theme - CSS Variables */
+/* 1c Consistency & Theme for CSS variables */
 :root {
     --primary-dark-grey: #1a1a1a;
     --accent-gold: #e6b800;
@@ -9,7 +9,7 @@
     --transition: all 0.3s ease;
 }
 
-/* 1a CSS Selectors - Universal selector resets browser defaults */
+/* 1b. Layout & Positioning  */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -27,7 +27,7 @@ body {
     min-height: 100vh;
 }
 
-/* 1b Layout & Positioning - Sticky header */
+/* 1b Layout & Positioning  header */
 header {
     background: var(--primary-dark-grey);
     padding: 1.2rem 8%;
@@ -40,7 +40,7 @@ header {
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-/* 1a CSS Selectors - Descendant selector */
+/* 1a CSS Selectors descendant selector */
 header .logo {
     color: var(--white);
     font-size: 1.8rem;
@@ -49,7 +49,7 @@ header .logo {
     letter-spacing: -1px;
 }
 
-/* 1a CSS Selectors - Class selector */
+/* 1a CSS Selectors for class selector */
 .logo {
     color: var(--primary-dark-grey);
     text-decoration: none;
@@ -58,13 +58,13 @@ header .logo {
     transition: var(--transition);
 }
 
-/* 1a CSS Selectors - Pseudo-class */
+/* 1a CSS Selectors for pseudo-class */
 .logo:hover {
     color: var(--accent-gold);
     transform: scale(1.05);
 }
 
-/* 1a CSS Selectors - Descendant selector */
+/* 1a CSS Selectors for descendant selector */
 nav a {
     color: var(--white);
     text-decoration: none;
@@ -74,31 +74,48 @@ nav a {
     transition: var(--transition);
 }
 
-/* 1a CSS Selectors - Pseudo-class */
+/* 1a CSS Selectors for pseudo-class */
 nav a:hover {
     color: var(--accent-gold);
 }
 
-/* 1b Layout - flex:1 pushes footer down */
+/* 1b Layout to pushes footer down */
 main {
     flex: 1;
     width: 100%;
 }
 
-/* 1b Layout - Centered content */
+/* 1b Layout to center content */
 section {
     max-width: 1200px;
     margin: 40px auto;
     padding: 0 5%;
 }
 
-/* 1c Consistency - Element selector for headings */
+/* 1c Consistency for Footer across all pages */
+footer {
+    background-color: var(--primary-dark-grey);
+    color: var(--white);
+    padding: 40px 20px;
+    text-align: center;
+    width: 100%;
+    margin-top: 60px;
+}
+
+footer p {
+    margin: 0;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+}
+
+
+/* 1c Consistency for  selector headings */
 h1, h2 {
     color: var(--primary-dark-grey);
     margin-bottom: 20px;
 }
 
-/* 1b Layout - Flexbox centers login/register */
+/* 1b Layout  centers using flexbox for login & register */
 .user-section {
     display: flex;
     justify-content: center;
@@ -107,7 +124,7 @@ h1, h2 {
     padding: 40px 20px;
 }
 
-/* 1c Consistency - Reusable card style */
+/* 1c Consistency for card style */
 .user-card {
     background: var(--white);
     padding: 45px;
@@ -118,7 +135,7 @@ h1, h2 {
     text-align: center;
 }
 
-/* 1b Layout - CSS Grid for products */
+/* 1b Layout CSS grid for products */
 #productgrid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -126,7 +143,7 @@ h1, h2 {
     margin-top: 30px;
 }
 
-/* 1b Layout - Flexbox for category row */
+/* 1b Layout using flexbox for each category row */
 .categories {
     display: flex;
     gap: 12px;
@@ -134,7 +151,7 @@ h1, h2 {
     flex-wrap: wrap;
 }
 
-/* 1a CSS Selectors - Class selector */
+/* 1a CSS Selectors class selector */
 .category-btn {
     padding: 10px 20px;
     border: 2px solid var(--primary-dark-grey);
@@ -146,7 +163,7 @@ h1, h2 {
     transition: var(--transition);
 }
 
-/* 1a CSS Selectors - Pseudo-class */
+/* 1a CSS Selectors pseudo-class */
 .category-btn.active, .category-btn:hover {
     background: var(--primary-dark-grey);
     color: var(--white);
@@ -160,15 +177,15 @@ h1, h2 {
     display: inline-block;
 }
 
-/* 1a CSS Selectors - Base Button Styles */
+/* 1a CSS Selectors for default button styles */
 .btn {
-    display: block; /* Fixes link tags not acting like buttons */
+    display: block; 
     text-align: center;
     text-decoration: none;
     background: var(--primary-dark-grey);
     color: var(--white);
     padding: 14px;
-    width: 100%; /* Default to full width for forms */
+    width: 100%; 
     border: none;
     border-radius: 8px;
     font-weight: 600;
@@ -177,7 +194,7 @@ h1, h2 {
     transition: var(--transition);
 }
 
-/* 1a CSS Selectors - Pseudo-class hover */
+/* 1a CSS Selectors pseudo-class when hovered over buttons */
 .btn:hover {
     background: var(--accent-gold);
     color: var(--primary-dark-grey);
@@ -185,7 +202,7 @@ h1, h2 {
     box-shadow: 0 8px 20px rgba(230, 184, 0, 0.3);
 }
 
-/* 1d Code Quality - ID selectors make checkout buttons not full width */
+/* 1d Code Quality - id selectors for consistency */
 #confirm-order-btn, #cancel-btn, #clear-btn, #close-btn, #clear-cart-btn,
 .cart-item .btn, .summary .btn, #cart-container .btn {
     width: auto;
@@ -194,7 +211,7 @@ h1, h2 {
     padding: 10px 20px;
 }
 
-/* Specific color for the Clear Cart button */
+/* a. CSS Selectors & Styling for the clear cart button */
 #clear-cart-btn {
     background-color: var(--error-red);
 }
@@ -380,23 +397,8 @@ input, select {
 
 .dev-details li { margin-bottom: 10px; }
 
-/* 1c Consistency - Footer across all pages */
-footer {
-    background-color: var(--primary-dark-grey);
-    color: var(--white);
-    padding: 40px 20px;
-    text-align: center;
-    width: 100%;
-    margin-top: 60px;
-}
 
-footer p {
-    margin: 0;
-    font-size: 0.9rem;
-    letter-spacing: 0.5px;
-}
-
-/* 1b Layout - Mobile view max 600px */
+/* 1b Layout for mobile view*/
 @media screen and (max-width: 600px) {
     .main-about-title { font-size: 1.8rem; }
     header { padding: 1rem 5%; }
@@ -457,13 +459,13 @@ footer p {
     }
 }
 
-/* 1b Layout - Desktop view min 950px */
+/* 1b Layout for desktop view  */
 @media screen and (min-width: 950px) {
     #productgrid { grid-template-columns: repeat(3, 1fr); }
     .mobile-nav-button { display: none; }
 }
 
-/* --- CHECKOUT PAGE OVERRIDES --- */
+
 #checkout-wide-card {
     max-width: 800px !important; 
     width: 100% !important;
@@ -482,7 +484,7 @@ footer p {
     background-color: var(--error-red) !important; 
 }
 
-/* Ensure buttons don't stretch on desktop */
+/* 1b. Layout & Positioning */
 .form-actions .btn {
     width: auto !important;
     flex: 1;
